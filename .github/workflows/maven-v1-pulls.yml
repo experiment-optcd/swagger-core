@@ -1,17 +1,13 @@
-name: Build Test PR 1.5
 
-on:
-  pull_request:
-    branches: [ "1.5" ]
-
+name: Modified Build Test PR 1.5
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 11, 17 ]
-
+        java:
+        - 11
+        - 17
     steps:
     - uses: actions/checkout@v2
     - name: Set up Java
@@ -23,7 +19,11 @@ jobs:
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
+        restore-keys: |-
           ${{ runner.os }}-maven-
     - name: Build with Maven and Gradle
       run: ./mvnw -B -Dhttps.protocols=TLSv1.2 verify --file pom.xml
+    name: build (${{ matrix.java }})
+'on':
+- push
+- workflow_dispatch
